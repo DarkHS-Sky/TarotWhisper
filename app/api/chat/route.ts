@@ -1,4 +1,5 @@
 import { NextRequest } from 'next/server'
+import { getCloudflareContext } from '@opennextjs/cloudflare'
 
 // 常量配置
 const MAX_MESSAGES = 50
@@ -109,9 +110,18 @@ function validateChatRequest(body: unknown): ValidationResult {
 
 export async function POST(request: NextRequest) {
   try {
-    const baseUrl = normalize(process.env.DEFAULT_LLM_BASE_URL)
-    const apiKey = normalize(process.env.DEFAULT_LLM_API_KEY)
-    const enabled = parseBoolean(process.env.DEFAULT_LLM_ENABLED)
+    // 优先从 Cloudflare context 获取环境变量，回退到 process.env（本地开发）
+    let envVars: Record<string, string | undefined> = process.env as Record<string, string | undefined>
+    try {
+      const { env } = getCloudflareContext()
+      if (env) envVars = env as Record<string, string | undefined>
+    } catch {
+      // 本地开发时 getCloudflareContext 可能不可用，使用 process.env
+    }
+
+    const baseUrl = normalize(envVars.DEFAULT_LLM_BASE_URL)
+    const apiKey = normalize(envVars.DEFAULT_LLM_API_KEY)
+    const enabled = parseBoolean(envVars.DEFAULT_LLM_ENABLED)
 
     if (!enabled || !baseUrl || !apiKey) {
       return new Response(
