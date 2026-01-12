@@ -6,7 +6,11 @@
     "dev": "next dev",
     "build": "next build --webpack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "cf:build": "npx opennextjs-cloudflare build",
+    "cf:dev": "npx opennextjs-cloudflare dev",
+    "cf:deploy": "npx opennextjs-cloudflare deploy",
+    "cf:preview": "npx opennextjs-cloudflare deploy --env preview"
   },
   "dependencies": {
     "next": "16.0.10",
@@ -15,6 +19,7 @@
     "react-markdown": "^10.1.0"
   },
   "devDependencies": {
+    "@opennextjs/cloudflare": "^1.0.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
@@ -23,6 +28,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.0.0",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "wrangler": "^4"
   }
 }
